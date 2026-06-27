@@ -1,928 +1,923 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROSEBAKERY Manager</title>
-    <!-- Font Awesome untuk ikon-ikon dashboard -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Menggunakan Plus Jakarta Sans untuk Tipografi Premium -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            /* Tema Warna: Serba Blush Pink & Aesthetic, Tanpa Krem */
-            --bg-rose-light: #FFF5F6;
-            --bg-rose-card: #FFFFFF;
-            --text-dark: #2A1F21;
-            --text-muted: #8C7679;
-            --primary-pink: #FFE3E7;
-            --accent-rose: #FFAEC1;
-            --accent-rose-deep: #D47A8F;
-            --soft-pink-border: rgba(212, 122, 143, 0.15);
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --card-shadow: 0 8px 30px rgba(212, 122, 143, 0.04);
-            --hover-shadow: 0 12px 40px rgba(212, 122, 143, 0.12);
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-rose-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Layout Grid Utama */
-        .app-container {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            min-height: 100vh;
-        }
-
-        /* Top Navigation Bar */
-        .top-nav {
-            grid-column: 1 / -1;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(255, 245, 246, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--soft-pink-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;
-            height: 80px;
-        }
-
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* Logo Khusus Rosebakery */
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, var(--accent-rose), var(--accent-rose-deep));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 14px rgba(212, 122, 143, 0.3);
-        }
-
-        .brand-text h1 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--text-dark);
-        }
-
-        .brand-text span {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 6px;
-            height: 100%;
-            align-items: center;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 0.88rem;
-            font-weight: 500;
-            padding: 10px 16px;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--accent-rose-deep);
-            background: var(--primary-pink);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .search-wrapper {
-            position: relative;
-        }
-
-        .search-wrapper i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        .search-input {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid var(--soft-pink-border);
-            padding: 10px 16px 10px 38px;
-            border-radius: 30px;
-            font-family: inherit;
-            font-size: 0.85rem;
-            width: 200px;
-            transition: var(--transition);
-            color: var(--text-dark);
-        }
-
-        .search-input:focus {
-            outline: none;
-            background: white;
-            border-color: var(--accent-rose-deep);
-            box-shadow: 0 0 0 4px rgba(254, 174, 193, 0.2);
-        }
-
-        .notification-trigger {
-            position: relative;
-            background: white;
-            border: 1px solid var(--soft-pink-border);
-            color: var(--text-dark);
-            font-size: 1.05rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .notification-trigger:hover {
-            background: var(--primary-pink);
-            transform: scale(1.05);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: 11px;
-            right: 11px;
-            width: 6px;
-            height: 6px;
-            background: var(--accent-rose-deep);
-            border-radius: 50%;
-        }
-
-        /* Sidebar Menu */
-        .sidebar {
-            background: #FFFFFF;
-            border-right: 1px solid var(--soft-pink-border);
-            padding: 32px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 28px;
-        }
-
-        .sidebar-section h3 {
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            padding-left: 12px;
-            font-weight: 600;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .sidebar-item a {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            color: var(--text-dark);
-            text-decoration: none;
-            font-size: 0.88rem;
-            border-radius: var(--radius-md);
-            transition: var(--transition);
-            font-weight: 500;
-        }
-
-        .sidebar-item a i {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            width: 24px;
-            transition: var(--transition);
-        }
-
-        .sidebar-item a:hover {
-            background: var(--bg-rose-light);
-            padding-left: 18px;
-            color: var(--accent-rose-deep);
-        }
-
-        .sidebar-item a:hover i {
-            color: var(--accent-rose-deep);
-        }
-
-        .sidebar-badge {
-            font-size: 0.72rem;
-            background: var(--primary-pink);
-            padding: 2px 8px;
-            border-radius: 20px;
-            color: var(--accent-rose-deep);
-            font-weight: 600;
-        }
-
-        /* Area Kerja Utama (Main Workspace) */
-        .main-workspace {
-            padding: 40px;
-            max-width: 1600px;
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }
-
-        /* Efek Animasi Muncul Saat Scroll */
-        .scroll-animate {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .scroll-animate.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Greeting & Header Meta */
-        .workspace-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .greeting-meta h2 {
-            font-size: 1.8rem;
-            font-weight: 400;
-            color: var(--text-dark);
-        }
-
-        .greeting-meta h2 strong {
-            font-weight: 700;
-            color: var(--accent-rose-deep);
-        }
-
-        .greeting-meta p {
-            color: var(--text-muted);
-            font-size: 0.92rem;
-            margin-top: 4px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: white;
-            padding: 6px 16px 6px 6px;
-            border-radius: 40px;
-            border: 1px solid var(--soft-pink-border);
-        }
-
-        .avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-rose), var(--accent-rose-deep));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .profile-info h4 {
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .profile-info span {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            display: block;
-        }
-
-        /* Ringkasan Banner Atas */
-        .overview-banner {
-            background: white;
-            border: 1px solid var(--soft-pink-border);
-            border-radius: var(--radius-lg);
-            padding: 24px 32px;
-            box-shadow: var(--card-shadow);
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-        }
-
-        .overview-metric {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            border-right: 1px solid var(--soft-pink-border);
-            padding-right: 16px;
-        }
-
-        .overview-metric:last-child {
-            border-right: none;
-            padding-right: 0;
-        }
-
-        .overview-metric span {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .overview-metric h3 {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .overview-metric p {
-            font-size: 0.82rem;
-            color: var(--accent-rose-deep);
-        }
-
-        .metric-progress-container {
-            width: 100%;
-            height: 6px;
-            background: var(--bg-rose-light);
-            border-radius: 10px;
-            margin-top: 6px;
-            overflow: hidden;
-        }
-
-        .metric-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-rose), var(--accent-rose-deep));
-            border-radius: 10px;
-            width: 0%; 
-            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* Kartu UI Minimalis */
-        .ui-card {
-            background: var(--bg-rose-card);
-            border: 1px solid var(--soft-pink-border);
-            border-radius: var(--radius-lg);
-            padding: 28px;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-        }
-
-        .ui-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--hover-shadow);
-            border-color: var(--accent-rose);
-        }
-
-        /* Tata Letak Konten */
-        .dashboard-split-layout {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-        }
-
-        .dashboard-grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-        }
-
-        /* Judul Blok Kartu */
-        .card-header-block {
-            margin-bottom: 20px;
-        }
-
-        .card-title-area h3 {
-            font-size: 1.05rem;
-            font-weight: 600;
-        }
-
-        .card-title-area p {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        /* Animasi Pop-Up Diagram Batang CSS */
-        .chart-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            height: 220px;
-            padding-top: 20px;
-            position: relative;
-        }
-
-        .chart-bar-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            gap: 8px;
-        }
-
-        .chart-bar-track {
-            width: 32px;
-            height: 160px;
-            background: var(--bg-rose-light);
-            border-radius: 8px;
-            display: flex;
-            align-items: flex-end;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .chart-bar-fill {
-            width: 100%;
-            height: 0%; 
-            background: linear-gradient(180deg, var(--accent-rose), var(--accent-rose-deep));
-            border-radius: 8px;
-            transition: height 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-
-        .chart-bar-wrapper.highest .chart-bar-fill {
-            background: linear-gradient(180deg, #FF6B8B, #C23B5B);
-            box-shadow: 0 4px 12px rgba(212, 122, 143, 0.3);
-        }
-
-        .chart-label {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-
-        .chart-value {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--accent-rose-deep);
-            opacity: 0;
-            transition: opacity 0.4s ease 0.8s;
-        }
-
-        .scroll-animate.visible .chart-value {
-            opacity: 1;
-        }
-
-        /* Tabel Data Premium */
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        .premium-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.85rem;
-        }
-
-        .premium-table th {
-            color: var(--text-muted);
-            font-weight: 600;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--soft-pink-border);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .premium-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid rgba(212, 122, 143, 0.06);
-        }
-
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 600;
-        }
-
-        .status-pill.success { background: #E6F4EA; color: #137333; }
-        .status-pill.process { background: #FFF0F2; color: var(--accent-rose-deep); }
-        .status-pill.wait { background: #FEF7E0; color: #B06000; }
-
-        /* Komponen List Grid */
-        .item-row-card {
-            background: var(--bg-rose-light);
-            padding: 16px;
-            border-radius: var(--radius-md);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
-        }
-
-        .item-row-card:hover {
-            background: #FFFFFF;
-            border-color: var(--accent-rose);
-            box-shadow: var(--card-shadow);
-        }
-
-        /* Footer Master */
-        .master-footer {
-            background: #FFFFFF;
-            border-top: 1px solid var(--soft-pink-border);
-            padding: 32px 40px;
-            margin-top: 40px;
-        }
-
-        .footer-content {
-            max-width: 1600px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-        }
-
-        .footer-brand h4 {
-            color: var(--text-dark);
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .version-tag {
-            background: var(--bg-rose-light);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            color: var(--accent-rose-deep);
-            font-weight: 600;
-        }
-
-        /* Desain Responsif Layar */
-        @media (max-width: 1200px) {
-            .app-container { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
-            .overview-banner { grid-template-columns: repeat(2, 1fr); }
-            .dashboard-split-layout { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 768px) {
-            .overview-banner { grid-template-columns: 1fr; }
-            .top-nav { padding: 0 20px; }
-            .nav-menu { display: none; }
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>RoseBakery Manager — 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght=0,500;0,700;1,500&family=DM+Sans:wght=300;400;500;600&family=DM+Mono:wght=400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root {
+  /* Blush pink palette */
+  --p0:  #fff5f7;
+  --p1:  #ffe4ea;
+  --p2:  #ffcad5;
+  --p3:  #ff9eb5;
+  --p4:  #f97098;
+  --p5:  #e84d7a;
+  --p6:  #c73062;
+  --p7:  #9b1c48;
+
+  --hot: #ff2d78;
+  --hot-glow: rgba(255,45,120,.18);
+
+  --bg:    #fff0f4;
+  --bg2:   #ffe8ef;
+  --card:  #ffffff;
+  --border:#ffc8d8;
+  --border-light:#ffe0e8;
+
+  --gray-50:#fff8fa;
+  --gray-100:#fce8ee;
+  --gray-200:#f0d0da;
+  --gray-300:#d8a8b8;
+  --gray-400:#b07888;
+  --gray-500:#8a5060;
+  --gray-700:#5a2838;
+  --gray-900:#2d0f1a;
+
+  --gold:#e8a030;
+  --gold-bg:#fff5e0;
+  --sage:#3d8a5a;
+  --sage-bg:#e0f4e8;
+  --blue:#3060d8;
+  --blue-bg:#e0e8ff;
+
+  --font-h: 'Playfair Display', Georgia, serif;
+  --font-b: 'DM Sans', system-ui, sans-serif;
+  --font-m: 'DM Mono', monospace;
+
+  --r-sm:6px; --r-md:10px; --r-lg:16px; --r-xl:22px; --r-pill:999px;
+  --sh-glow: 0 0 0 1px var(--border), 0 4px 24px var(--hot-glow);
+  --sh-card: 0 1px 3px rgba(180,40,80,.05), 0 4px 16px rgba(180,40,80,.06);
+  --sh-hover: 0 8px 32px rgba(200,48,98,.14);
+  --nav-h:62px;
+  --sb-w:228px;
+  --t: 180ms cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);font-size:14px;line-height:1.6;color:var(--gray-700);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+ul{list-style:none;}
+button{border:none;background:none;cursor:pointer;font-family:inherit;position:relative;overflow:hidden;}
+input{font-family:inherit;outline:none;border:none;background:none;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:var(--p2);border-radius:99px;}
+
+/* ── LOADING SCREEN ── */
+#loading-screen {
+  position: fixed; inset: 0; background: var(--bg); z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  transition: opacity 0.5s ease, visibility 0.5s;
+}
+#loading-screen.fade-out { opacity: 0; visibility: hidden; }
+.loading-logo { width: 80px; height: 80px; animation: spinBakery 2s infinite linear; }
+@keyframes spinBakery { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.loading-text { font-family: var(--font-h); font-size: 24px; color: var(--gray-900); font-weight: 700; }
+.loading-text span { color: var(--p5); }
+
+/* ── ANIMASI ENHANCEMENT ── */
+.app-section { display: none; }
+.app-section.active-section { display: flex; flex-direction: column; gap: 28px; animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Staggered entry untuk dashboard cards */
+.sc, .pc, .ec, .rc, .dc, .an-c { opacity: 0; transform: translateY(15px); }
+.animated-in .sc, .animated-in .pc, .animated-in .ec, .animated-in .rc, .animated-in .dc, .animated-in .an-c {
+  animation: itemReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes itemReveal { to { opacity: 1; transform: translateY(0); } }
+
+/* Floating animation logo */
+.logo-svg { animation: floatIcon 3s ease-in-out infinite; }
+@keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+/* Ripple Effect */
+.ripple {
+  position: absolute; background: rgba(255, 77, 122, 0.3); border-radius: 50%;
+  transform: scale(0); animation: rippleEffect 0.6s linear; pointer-events: none;
+}
+@keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
+
+/* Skeleton Loading */
+.skeleton { background: linear-gradient(90deg, var(--p1) 25%, var(--p0) 50%, var(--p1) 75%); background-size: 200% 100%; animation: loadingSkeleton 1.5s infinite; color: transparent !important; }
+.skeleton * { visibility: hidden; }
+@keyframes loadingSkeleton { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* Low Stock Alert subtle blink */
+.blink-soft { animation: softBlinker 1.5s infinite alternate; }
+@keyframes softBlinker { from { opacity: 1; background-color: var(--p1); } to { opacity: 0.6; background-color: #ffe0e0; } }
+
+/* Toast Notification */
+#toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+.toast { background: white; border-left: 4px solid var(--p5); box-shadow: var(--sh-hover); padding: 12px 20px; border-radius: var(--r-md); font-size: 13px; color: var(--gray-700); display: flex; align-items: center; gap: 10px; transform: translateX(120%); animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes toastIn { to { transform: translateX(0); } }
+
+/* Back to Top */
+#back-to-top { position: fixed; bottom: 20px; right: 20px; background: var(--p5); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--sh-hover); opacity: 0; visibility: hidden; transition: var(--t); z-index: 100; }
+#back-to-top.show { opacity: 1; visibility: visible; }
+
+/* Profile Dropdown */
+.profile-container { position: relative; }
+.profile-menu { position: absolute; top: calc(100% + 10px); right: 0; background: white; border: 1.5px solid var(--border-light); border-radius: var(--r-md); box-shadow: var(--sh-hover); padding: 8px 0; width: 160px; display: none; z-index: 500; }
+.profile-menu.show { display: block; animation: slideUpFade 0.2s ease; }
+.profile-menu a { display: block; padding: 8px 16px; font-size: 13px; color: var(--gray-700); }
+.profile-menu a:hover { background: var(--p0); color: var(--p5); }
+
+/* ── NAV & SIDEBAR BASE STYLE REUSE ── */
+.nav{
+  position:sticky;top:0;z-index:300;height:var(--nav-h);
+  background:rgba(255,240,244,.88);backdrop-filter:blur(20px) saturate(1.5);
+  border-bottom:1.5px solid var(--border-light);
+  display:flex;align-items:center;padding:0 22px;gap:0;
+}
+.nav-brand{ display:flex;align-items:center;gap:11px; min-width:var(--sb-w);padding-right:12px;flex-shrink:0; }
+.brand-text{line-height:1;}
+.brand-name{ font-family:var(--font-h);font-size:18px;font-weight:700; color:var(--gray-900);letter-spacing:.2px; }
+.brand-name span{color:var(--p5);font-style:italic;}
+.brand-sub{ font-size:9px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase; color:var(--p4);margin-top:1px; }
+.nav-links{display:flex;align-items:center;gap:1px;flex:1;}
+.nav-links button{ display:flex;align-items:center;gap:6px; padding:6px 11px;border-radius:var(--r-md); font-size:13px;font-weight:500;color:var(--gray-400); transition:background var(--t),color var(--t);white-space:nowrap; }
+.nav-links button i{font-size:11.5px;}
+.nav-links button:hover{color:var(--gray-700);background:var(--p0);}
+.nav-links button.on{color:var(--p5);background:var(--p0);font-weight:600;}
+.nav-r{display:flex;align-items:center;gap:7px;margin-left:auto;}
+.n-search{ display:flex;align-items:center;gap:8px; background:var(--card);border:1.5px solid var(--border); border-radius:var(--r-pill);padding:6px 14px; transition:border-color var(--t),box-shadow var(--t); }
+.n-search:focus-within{border-color:var(--p4);box-shadow:0 0 0 3px var(--hot-glow);}
+.n-search i{color:var(--p3);font-size:12px;}
+.n-search input{width:150px;font-size:13px;color:var(--gray-700);}
+.n-search input::placeholder{color:var(--p3);}
+.ni-btn{ width:34px;height:34px;border-radius:var(--r-md); display:flex;align-items:center;justify-content:center; color:var(--p4);position:relative; transition:background var(--t),color var(--t); }
+.ni-btn:hover{background:var(--p1);color:var(--p6);}
+.n-dot{ position:absolute;top:5px;right:5px;width:7px;height:7px; background:var(--hot);border-radius:50%;border:2px solid var(--bg); }
+.nav-av{ width:32px;height:32px;border-radius:50%; background:linear-gradient(135deg,var(--p3),var(--p5)); display:flex;align-items:center;justify-content:center; color:#fff;font-size:11px;font-weight:700;letter-spacing:.5px; border:2px solid var(--card);box-shadow:var(--sh-card);cursor:pointer; }
+
+.layout{display:grid;grid-template-columns:var(--sb-w) 1fr;min-height:calc(100vh - var(--nav-h)); transition: grid-template-columns var(--t);}
+.layout.collapsed { grid-template-columns: 60px 1fr; }
+.layout.collapsed .sb-item span, .layout.collapsed .sb-section, .layout.collapsed .sb-pill { display: none; }
+.layout.collapsed .sb { width: 60px; }
+
+.sb{ position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h)); overflow-y:auto; background:var(--card);border-right:1.5px solid var(--border-light); padding:16px 10px 28px;display:flex;flex-direction:column;gap:2px; transition: width var(--t); }
+.sb-section{font-size:9px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--p3);padding:14px 8px 5px;}
+.sb-item{ display:flex;align-items:center;gap:9px; padding:7px 10px;border-radius:var(--r-md); font-size:13px;font-weight:500;color:var(--gray-400);cursor:pointer; transition:background var(--t),color var(--t); }
+.sb-item i{font-size:12px;width:14px;text-align:center;color:var(--p3);}
+.sb-item:hover{background:var(--p0);color:var(--gray-700);}
+.sb-item.on{background:linear-gradient(90deg,var(--p0),var(--bg));color:var(--p5);font-weight:600;}
+.sb-item.on i{color:var(--p5);}
+.sb-pill{ margin-left:auto;font-size:10px;font-weight:700; background:var(--p1);color:var(--p5); padding:1.5px 7px;border-radius:99px; }
+.sb-pill.g{background:var(--sage-bg);color:var(--sage);}
+.sb-pill.a{background:var(--gold-bg);color:var(--gold);}
+
+.main{padding:28px 28px 48px;display:flex;flex-direction:column;gap:28px;min-width:0;}
+
+.hero{ background:linear-gradient(130deg,var(--p5) 0%,var(--p4) 45%,#ff6b9d 100%); border-radius:var(--r-xl);padding:28px 28px 24px; position:relative;overflow:hidden; box-shadow:0 8px 40px rgba(200,48,98,.28); }
+.hero::before{ content:'';position:absolute;top:-40px;right:-40px; width:220px;height:220px;border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.15) 0%,transparent 70%); }
+.hero::after{ content:'';position:absolute;bottom:-30px;left:180px; width:120px;height:120px;border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%); }
+.hero-inner{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;position:relative;z-index:1;}
+.hero-eye{font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:5px;}
+.hero-title{font-family:var(--font-h);font-size:30px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:6px;}
+.hero-title em{font-style:italic;font-weight:500;}
+.hero-sub{font-size:13px;color:rgba(255,255,255,.8);}
+.hero-sub b{color:#fff;}
+
+.hero-card{ background:rgba(255,255,255,.18);backdrop-filter:blur(12px); border:1.5px solid rgba(255,255,255,.3); border-radius:var(--r-lg);padding:18px 20px;min-width:280px; }
+.hc-eye{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:12px;}
+.hc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.hc-item .lbl{font-size:10.5px;color:rgba(255,255,255,.65);margin-bottom:2px;}
+.hc-item .val{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.5px;line-height:1;}
+.hc-item .vsub{font-size:11px;color:rgba(255,255,255,.65);margin-top:1px;}
+.hc-div{grid-column:1/-1;height:1px;background:rgba(255,255,255,.15);}
+.hc-badge{ display:inline-flex;align-items:center;gap:5px; background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3); color:#fff;font-size:11.5px;font-weight:600; padding:3px 10px;border-radius:var(--r-pill); }
+
+.sh{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:15px;}
+.sh-l .st{font-size:17px;font-weight:600;color:var(--gray-900);letter-spacing:-.3px;}
+.sh-l .st i{font-style:normal;color:var(--p5);}
+.sh-l .ss{font-size:12px;color:var(--gray-400);margin-top:2px;}
+.sh-r{font-size:12.5px;color:var(--p4);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color var(--t);}
+.sh-r:hover{color:var(--p6);}
+
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.sc{ background:var(--card);border:1.5px solid var(--border-light); border-radius:var(--r-lg);padding:20px 18px; display:flex;flex-direction:column;gap:12px; transition:transform var(--t),box-shadow var(--t),border-color var(--t); }
+.sc:hover{transform:translateY(-3px);box-shadow:var(--sh-hover);border-color:var(--p2);}
+.sc-icon{ width:38px;height:38px;border-radius:var(--r-md); display:flex;align-items:center;justify-content:center;font-size:15px; }
+.ic-pk{background:var(--p1);color:var(--p5);}
+.ic-gd{background:var(--gold-bg);color:var(--gold);}
+.ic-sg{background:var(--sage-bg);color:var(--sage);}
+.ic-bl{background:var(--blue-bg);color:var(--blue);}
+.sc-num{font-size:32px;font-weight:700;color:var(--gray-900);letter-spacing:-1.2px;line-height:1;}
+.sc-desc{font-size:12px;color:var(--gray-400);}
+.sc-delta{font-size:11.5px;font-weight:600;color:var(--sage);}
+.sc-delta.neg{color:var(--p5);}
+
+.tc{background:var(--card);border:1.5px solid var(--border-light);border-radius:var(--r-xl);overflow:hidden;}
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead th{ padding:10px 16px;text-align:left; font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase; color:var(--p4);background:var(--p0);border-bottom:1.5px solid var(--border-light); white-space:nowrap; }
+tbody tr{border-bottom:1px solid var(--border-light);transition:background var(--t);cursor:pointer;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--p0);}
+tbody tr.selected-row { background: var(--p1) !important; }
+tbody td{padding:12px 16px;font-size:13px;color:var(--gray-700);white-space:nowrap;}
+.tid{font-family:var(--font-m);font-size:11.5px;color:var(--p5);font-weight:500;}
+.tbold{font-weight:600;color:var(--gray-900);}
+.tav{display:flex;align-items:center;gap:8px;}
+.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#fff;flex-shrink:0;}
+.a1{background:linear-gradient(135deg,var(--p3),var(--p5));}
+.a2{background:linear-gradient(135deg,#90b4fe,#4060d8);}
+.a3{background:linear-gradient(135deg,#f9c58a,var(--gold));}
+.a4{background:linear-gradient(135deg,#a8f0c8,var(--sage));}
+.a5{background:linear-gradient(135deg,#fda4c0,var(--p6));}
+.a6{background:linear-gradient(135deg,#c4b5fd,#7c3aed);}
+.a7{background:linear-gradient(135deg,#6ee7b7,#059669);}
+.a8{background:linear-gradient(135deg,#fde68a,#d97706);}
+
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--r-pill);letter-spacing:.3px;}
+.b-paid    {background:#e0f5e8;color:#1e7a3c;}
+.b-pending {background:var(--gold-bg);color:var(--gold);}
+.b-unpaid  {background:var(--p1);color:var(--p6);}
+.b-delivered{background:#e0f5e8;color:#1e7a3c;}
+.b-onway   {background:var(--blue-bg);color:var(--blue);}
+.b-processing{background:var(--p1);color:var(--p5);}
+.b-ready   {background:var(--gold-bg);color:var(--gold);}
+.b-low     {background:var(--p1);color:var(--p6);}
+.b-ok      {background:#e0f5e8;color:#1e7a3c;}
+.b-critical{background:#ffe0e0;color:#c02020;}
+.b-inprog  {background:var(--blue-bg);color:var(--blue);}
+.b-done    {background:#e0f5e8;color:#1e7a3c;}
+.b-sched   {background:var(--p0);color:var(--gray-400);border:1px solid var(--border-light);}
+.b-active  {background:#e0f5e8;color:#1e7a3c;}
+.b-break   {background:var(--gold-bg);color:var(--gold);}
+.b-off     {background:var(--gray-100);color:var(--gray-400);}
+.b-high    {background:var(--p1);color:var(--p5);}
+.b-med     {background:var(--gold-bg);color:var(--gold);}
+.b-lowp    {background:var(--sage-bg);color:var(--sage);}
+.b-urgent  {background:#ffe0e0;color:#c02020;}
+.b-reorder {background:var(--gold-bg);color:var(--gold);}
+
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:14px;}
+.pc{ background:var(--card);border:1.5px solid var(--border-light); border-radius:var(--r-lg);padding:18px 18px; display:flex;flex-direction:column;gap:12px; transition:transform var(--t),box-shadow var(--t),border-color var(--t); }
+.pc:hover{transform:translateY(-2px);box-shadow:var(--sh-hover);border-color:var(--p2);}
+.pc-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.pc-name{font-size:14px;font-weight:700;color:var(--gray-900);}
+.pc-meta{display:flex;flex-direction:column;gap:5px;}
+.pc-row{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--gray-400);}
+.pc-row i{font-size:11px;color:var(--p3);width:13px;text-align:center;}
+.pc-row b{color:var(--gray-700);font-weight:600;}
+.pc-prog{display:flex;align-items:center;gap:9px;}
+.pc-track{flex:1;height:5px;background:var(--p1);border-radius:99px;overflow:hidden;}
+.pc-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--p3),var(--hot)); width: 0; transition: width 1s cubic-bezier(.4,0,.2,1);}
+.pc-pct{font-size:11px;font-weight:700;color:var(--p5);font-family:var(--font-m);}
+.pc-ft{display:flex;align-items:center;justify-content:space-between;}
+.pc-oven{font-size:11px;color:var(--gray-400);}
+
+.eg{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:14px;}
+.ec{ background:var(--card);border:1.5px solid var(--border-light); border-radius:var(--r-lg);padding:20px 16px; display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center; transition:transform var(--t),box-shadow var(--t),border-color var(--t); }
+.ec:hover{transform:translateY(-3px);box-shadow:var(--sh-hover);border-color:var(--p2);}
+.ec-av-w{position:relative;}
+.ec-av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;border:2.5px solid var(--card);box-shadow:0 0 0 2px var(--p2);}
+.ec-dot{position:absolute;bottom:1px;right:1px;width:11px;height:11px;border-radius:50%;border:2.5px solid var(--card);}
+.dot-on{background:#22c55e;}
+.dot-br{background:#f59e0b;}
+.dot-off{background:var(--gray-300);}
+.ec-name{font-size:13.5px;font-weight:700;color:var(--gray-900);}
+.ec-role{font-size:11.5px;color:var(--gray-400);}
+.ec-station{font-size:12px;color:var(--p4);}
+.ec-hours{font-family:var(--font-m);font-size:11px;color:var(--p5);background:var(--p0);padding:2px 9px;border-radius:var(--r-pill);border:1px solid var(--border-light);}
+
+.rg{display:flex;flex-direction:column;gap:12px;}
+.rc{ background:var(--card);border:1.5px solid var(--border-light); border-radius:var(--r-lg);padding:16px 18px; display:flex;flex-direction:column;gap:9px; transition:transform var(--t),box-shadow var(--t),border-color var(--t); }
+.rc:hover{transform:translateY(-1px);box-shadow:var(--sh-hover);border-color:var(--p2);}
+.rc-hd{display:flex;align-items:center;justify-content:space-between;}
+.rc-name{font-size:13.5px;font-weight:700;color:var(--gray-900);}
+.rc-date{font-size:11px;color:var(--gray-400);}
+.stars{display:flex;gap:2px;}
+.stars i{font-size:12px;color:var(--gold);}
+.stars i.e{color:var(--p2);}
+.rc-prod{font-size:11px;font-weight:700;background:var(--p1);color:var(--p5);padding:2px 9px;border-radius:var(--r-pill);display:inline-block;margin-bottom:2px;}
+.rc-text{font-size:12.5px;color:var(--gray-400);line-height:1.65;}
+
+.an-g{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.an-c{ background:var(--card);border:1.5px solid var(--border-light); border-radius:var(--r-lg);padding:18px 16px; transition:transform var(--t); }
+.an-c:hover{transform:translateY(-2px);}
+.an-lbl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--p4);margin-bottom:6px;}
+.an-val{font-size:26px;font-weight:700;color:var(--gray-900);letter-spacing:-.8px;line-height:1;margin-bottom:3px;}
+.an-val.gd{color:var(--gold);}
+.an-sub{font-size:11.5px;color:var(--gray-400);}
+.an-sub b{color:var(--sage);font-weight:700;}
+
+.chart-box{ background:var(--card);border:1.5px solid var(--border-light); border-radius:var(--r-xl);padding:20px; }
+.chart-ttl{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;}
+.chart-filter-select { font-size:11px; padding:4px 8px; border:1px solid var(--border); border-radius:var(--r-sm); color:var(--gray-700); background:white; }
+.chart-sub{font-size:11.5px;color:var(--gray-400);margin-bottom:18px;}
+.chart-body{display:flex;align-items:flex-end;gap:8px;height:160px;position:relative;}
+.chart-grid{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none;}
+.chart-grid-line{width:100%;height:1px;background:var(--border-light);}
+.b-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;}
+.b-wrap{flex:1;width:100%;display:flex;align-items:flex-end;}
+.bar{ width:100%;border-radius:7px 7px 0 0; background:linear-gradient(180deg,var(--p3),var(--p1)); transform:scaleY(0);transform-origin:bottom; transition:transform .7s cubic-bezier(.34,1.56,.64,1), opacity .2s, box-shadow .2s; cursor:pointer;position:relative; }
+.bar.animate{transform:scaleY(1);}
+.bar:hover{opacity:.85;box-shadow:0 -4px 16px var(--hot-glow);}
+.bar.b-hot{background:linear-gradient(180deg,var(--hot),var(--p3));}
+.bar.b-gd{background:linear-gradient(180deg,var(--gold),#fde68a);}
+.bar.b-dim{background:linear-gradient(180deg,var(--p2),var(--p1));opacity:.4;}
+
+.bar-tip{ position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) scale(.85); background:var(--gray-900);color:#fff; font-size:11px;font-weight:700;font-family:var(--font-m); padding:4px 9px;border-radius:6px;white-space:nowrap; opacity:0;pointer-events:none; transition:opacity .15s,transform .15s; }
+.bar-tip::after{ content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%); border:4px solid transparent;border-top-color:var(--gray-900); }
+.bar:hover .bar-tip{opacity:1;transform:translateX(-50%) scale(1);}
+.b-lbl{font-size:11px;color:var(--p4);font-weight:600;}
+.b-val{ font-size:10px;color:var(--gray-400);font-family:var(--font-m); opacity:0;transform:translateY(4px); transition:opacity .5s,transform .5s; }
+.b-val.show{opacity:1;transform:translateY(0);}
+
+.dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px;}
+.dc{ background:var(--card);border:1.5px solid var(--border-light); border-radius:var(--r-lg);padding:16px 18px; display:flex;flex-direction:column;gap:10px; transition:transform var(--t),box-shadow var(--t),border-color var(--t); }
+.dc:hover{transform:translateY(-2px);box-shadow:var(--sh-hover);border-color:var(--p2);}
+.dc.u{border-left:3.5px solid var(--hot);}
+.dc.s{border-left:3.5px solid var(--gold);}
+.dc.f{border-left:3.5px solid var(--sage);}
+.dc-hd{display:flex;align-items:center;justify-content:space-between;}
+.dc-name{font-size:13.5px;font-weight:700;color:var(--gray-900);}
+.dc-time{font-family:var(--font-m);font-size:12px;background:var(--p1);color:var(--p5);padding:2px 9px;border-radius:var(--r-pill);font-weight:600;}
+.dc-meta{display:flex;flex-direction:column;gap:4px;}
+.dc-row{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--gray-400);}
+.dc-row i{font-size:11px;color:var(--p3);width:13px;text-align:center;}
+.dc-ft{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border-light);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;}
+
+.footer{ background:var(--card);border-top:1.5px solid var(--border-light); padding:36px 28px 24px;margin-top:8px; }
+.ft-inner{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:28px;margin-bottom:28px;}
+.ft-brand .fb{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ft-tagline{font-size:12.5px;color:var(--gray-400);line-height:1.7;max-width:210px;}
+.ft-ver{font-size:10.5px;color:var(--p3);font-family:var(--font-m);margin-top:10px;}
+.ft-col-ttl{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--p4);margin-bottom:12px;}
+.ft-col button{display:block;font-size:13px;color:var(--gray-400);margin-bottom:8px;transition:color var(--t); text-align:left;}
+.ft-col button:hover{color:var(--p5);}
+.ft-bottom{border-top:1.5px solid var(--border-light);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.ft-copy{font-size:12px;color:var(--gray-400);line-height:1.6;}
+.ft-copy b{color:var(--gray-700);}
+.ft-copy em{font-style:normal;color:var(--p5);font-weight:600;}
+.ft-disc{font-size:11px;color:var(--gray-300);text-align:right;max-width:400px;line-height:1.6;}
+
+@media(max-width:1200px){.sg{grid-template-columns:repeat(2,1fr);}  .an-g{grid-template-columns:1fr;} .ft-inner{grid-template-columns:1fr 1fr;}}
+@media(max-width:1024px){.two-col{grid-template-columns:1fr;}}
+@media(max-width:900px){.layout{grid-template-columns:1fr;} .sb{position:static;height:auto;flex-direction:row;flex-wrap:wrap;padding:10px 14px;gap:4px;border-right:none;border-bottom:1.5px solid var(--border-light);overflow-x:auto;} .sb-section{display:none;} .sb-item{white-space:nowrap;padding:6px 12px;}}
+@media(max-width:768px){.nav-links,.n-search{display:none;} .main{padding:16px 14px 32px;gap:20px;} .sg{grid-template-columns:repeat(2,1fr);} .ft-inner{grid-template-columns:1fr;gap:14px;} .ft-bottom{flex-direction:column;} .ft-disc{text-align:left;} .hero-inner{grid-template-columns:1fr;} .hero-card{min-width:unset;}}
+@media(max-width:480px){.sg{grid-template-columns:1fr;} .eg{grid-template-columns:repeat(2,1fr);}}
+</style>
 </head>
 <body>
 
-<div class="app-container">
-    
-    <!-- Navigation Atas -->
-    <header class="top-nav">
-        <div class="nav-brand">
-            <div class="logo-icon">
-                <i class="fa-solid fa-stroopwafel"></i>
-            </div>
-            <div class="brand-text">
-                <h1>ROSEBAKERY</h1>
-                <span>Sistem Manajemen Estetis</span>
-            </div>
-        </div>
-
-        <nav class="nav-menu">
-            <a href="#dashboard" class="nav-link active"><i class="fa-solid fa-chart-pie"></i> Ringkasan</a>
-            <a href="#orders" class="nav-link"><i class="fa-solid fa-basket-shopping"></i> Pesanan</a>
-            <a href="#products" class="nav-link"><i class="fa-solid fa-cake-candles"></i> Produk</a>
-            <a href="#inventory" class="nav-link"><i class="fa-solid fa-boxes-stacked"></i> Stok</a>
-        </nav>
-
-        <div class="nav-actions">
-            <div class="search-wrapper">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Cari analitik..." class="search-input">
-            </div>
-            <button class="notification-trigger" aria-label="Notifikasi">
-                <i class="fa-regular fa-bell"></i>
-                <div class="notification-badge"></div>
-            </button>
-        </div>
-    </header>
-
-    <!-- Sidebar Kiri -->
-    <aside class="sidebar">
-        <div class="sidebar-section">
-            <h3>Operasional Utama</h3>
-            <ul class="sidebar-menu">
-                <li class="sidebar-item"><a href="#overview"><i class="fa-solid fa-gauge"></i> Panel Utama</a></li>
-                <li class="sidebar-item">
-                    <a href="#orders">
-                        <span><i class="fa-solid fa-circle-dot"></i> Pesanan Hari Ini</span>
-                        <span class="sidebar-badge">32</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="sidebar-section">
-            <h3>Dapur & Staff</h3>
-            <ul class="sidebar-menu">
-                <li class="sidebar-item"><a href="#production"><i class="fa-solid fa-fire-burner"></i> Jadwal Oven</a></li>
-                <li class="sidebar-item"><a href="#roster"><i class="fa-solid fa-calendar-days"></i> Shift Kerja</a></li>
-            </ul>
-        </div>
-    </aside>
-
-    <!-- Konten Ruang Kerja Utama -->
-    <main class="main-workspace">
-        
-        <!-- Welcome Header -->
-        <section class="workspace-header scroll-animate">
-            <div class="greeting-meta">
-                <h2>Halo, <strong>Biyaa</strong> ✨</h2>
-                <p>Adonan Segar. Manajemen Sempurna. Berikut adalah status Rosebakery hari ini.</p>
-            </div>
-            <div class="user-profile">
-                <div class="avatar">BY</div>
-                <div class="profile-info">
-                    <h4>Biyaa</h4>
-                    <span>Manajer Utama</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Banner Metrik Cepat -->
-        <section class="overview-banner scroll-animate">
-            <div class="overview-metric">
-                <span>Omzet Kotor Hari Ini</span>
-                <h3>Rp 4.250.000</h3>
-                <p>+12% dari kemarin pagi</p>
-            </div>
-            <div class="overview-metric">
-                <span>Pesanan Selesai</span>
-                <h3>28 / 32</h3>
-                <p>4 pesanan sedang dipacking</p>
-            </div>
-            <div class="overview-metric">
-                <span>Target Produksi Kue</span>
-                <h3>85% Tercapai</h3>
-                <div class="metric-progress-container">
-                    <div class="metric-progress-bar" data-target="85%"></div>
-                </div>
-            </div>
-            <div class="overview-metric">
-                <span>Shift Berjalan</span>
-                <h3>Tim Pagi</h3>
-                <p>05:00 WIB — 13:00 WIB</p>
-            </div>
-        </section>
-
-        <!-- Diagram Pendapatan Mingguan (Pop-up Pop) -->
-        <div class="dashboard-split-layout">
-            <section class="ui-card scroll-animate" id="revenue-chart-section">
-                <div class="card-header-block">
-                    <div class="card-title-area">
-                        <h3>Grafik Pendapatan Harian Minggu Ini</h3>
-                        <p>Visualisasi performa omzet tertinggi (Warna pink cerah menandakan puncak tertinggi penjualan)</p>
-                    </div>
-                </div>
-                <!-- Diagram Batang Interaktif CSS + JS -->
-                <div class="chart-container">
-                    <div class="chart-bar-wrapper">
-                        <span class="chart-value">Rp 2.8M</span>
-                        <div class="chart-bar-track"><div class="chart-bar-fill" data-height="55%"></div></div>
-                        <span class="chart-label">Sen</span>
-                    </div>
-                    <div class="chart-bar-wrapper">
-                        <span class="chart-value">Rp 3.1M</span>
-                        <div class="chart-bar-track"><div class="chart-bar-fill" data-height="65%"></div></div>
-                        <span class="chart-label">Sel</span>
-                    </div>
-                    <div class="chart-bar-wrapper">
-                        <span class="chart-value">Rp 3.5M</span>
-                        <div class="chart-bar-track"><div class="chart-bar-fill" data-height="72%"></div></div>
-                        <span class="chart-label">Rab</span>
-                    </div>
-                    <div class="chart-bar-wrapper">
-                        <span class="chart-value">Rp 2.9M</span>
-                        <div class="chart-bar-track"><div class="chart-bar-fill" data-height="58%"></div></div>
-                        <span class="chart-label">Kam</span>
-                    </div>
-                    <div class="chart-bar-wrapper">
-                        <span class="chart-value">Rp 4.1M</span>
-                        <div class="chart-bar-track"><div class="chart-bar-fill" data-height="85%"></div></div>
-                        <span class="chart-label">Jum</span>
-                    </div>
-                    <!-- Sabtu Tertinggi -->
-                    <div class="chart-bar-wrapper highest">
-                        <span class="chart-value" style="font-weight:700;">Rp 5.2M</span>
-                        <div class="chart-bar-track"><div class="chart-bar-fill" data-height="100%"></div></div>
-                        <span class="chart-label" style="font-weight:700;">Sab</span>
-                    </div>
-                    <div class="chart-bar-wrapper">
-                        <span class="chart-value">Rp 4.8M</span>
-                        <div class="chart-bar-track"><div class="chart-bar-fill" data-height="92%"></div></div>
-                        <span class="chart-label">Min</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Status Stok Bahan Pokok -->
-            <section class="ui-card scroll-animate">
-                <div class="card-header-block">
-                    <div class="card-title-area">
-                        <h3>Status Bahan Baku</h3>
-                        <p>Inventaris esensial patisserie</p>
-                    </div>
-                </div>
-                <div class="table-wrapper">
-                    <table class="premium-table">
-                        <thead>
-                            <tr>
-                                <th>Bahan</th>
-                                <th>Stok</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td><strong>Tepung French T55</strong></td><td>180 Kg</td></tr>
-                            <tr><td><strong>Mentega Unsalted</strong></td><td>24 Kg</td></tr>
-                            <tr><td><strong>Cokelat Valrhona 70%</strong></td><td>12 Kg</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-
-        <!-- REVISI: Daftar Pembeli Nama Indonesia Gen Z & Review Bahasa Indonesia -->
-        <section class="ui-card scroll-animate">
-            <div class="card-header-block">
-                <div class="card-title-area">
-                    <h3>Daftar Pesanan & Review Terbaru</h3>
-                    <p>Pembaruan waktu nyata dari sistem kasir masuk serta penilaian pelanggan</p>
-                </div>
-            </div>
-            <div class="table-wrapper">
-                <table class="premium-table">
-                    <thead>
-                        <tr>
-                            <th>ID Pesanan</th>
-                            <th>Nama Pelanggan</th>
-                            <th>Produk</th>
-                            <th>Review Pelanggan</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>#RB-901</strong></td>
-                            <td><strong>Kayla Adristi</strong></td>
-                            <td>Almond Croissant (4)</td>
-                            <td><em>"Croissant-nya flaking sempurna, anak-anak rumah suka banget beneran enakk!"</em></td>
-                            <td><span class="status-pill success">Selesai</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>#RB-902</strong></td>
-                            <td><strong>Arka Pratama</strong></td>
-                            <td>Banana Bread Roll</td>
-                            <td><em>"Lembut parah, manisnya pas banget ga bikin enek. Next order lagi sih."</em></td>
-                            <td><span class="status-pill process">Dikirim</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>#RB-903</strong></td>
-                            <td><strong>Nabila Syifa</strong></td>
-                            <td>Pain au Chocolat (6)</td>
-                            <td><em>"Cokelatnya premium berasa banget lumer di mulut pas masih anget."</em></td>
-                            <td><span class="status-pill wait">Antrean Oven</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- REVISI: Tim Kerja Berjalan (Nama Indonesia Gen Z) -->
-        <section class="ui-card scroll-animate">
-            <div class="card-header-block">
-                <div class="card-title-area">
-                    <h3>Tim Dapur yang Bertugas</h3>
-                    <p>Penempatan staff pastry aktif di workstation</p>
-                </div>
-            </div>
-            <div class="dashboard-grid-2">
-                <div class="item-row-card">
-                    <div>
-                        <h4>Reyhan Putra</h4>
-                        <p style="font-size: 0.78rem; color: var(--text-muted);">Spesialis Pembuat Adonan Utama</p>
-                    </div>
-                    <span class="status-pill success">Aktif</span>
-                </div>
-                <div class="item-row-card">
-                    <div>
-                        <h4>Dinda Kirana</h4>
-                        <p style="font-size: 0.78rem; color: var(--text-muted);">Kepala Bagian Oven & Laminasi</p>
-                    </div>
-                    <span class="status-pill success">Aktif</span>
-                </div>
-            </div>
-        </section>
-
-    </main>
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <svg class="loading-logo" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="36" height="36" rx="10" fill="url(#ldg1)"/>
+    <circle cx="18" cy="18" r="8" fill="rgba(255,255,255,0.3)"/>
+    <path d="M14 18h8M18 14v8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <defs>
+      <linearGradient id="ldg1" x1="0" y1="0" x2="36" y2="36">
+        <stop offset="0%" stop-color="#ff6b9d"/><stop offset="100%" stop-color="#c73062"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <div class="loading-text"><span>BakeFlow</span> Loading...</div>
 </div>
 
-<!-- Footer Aplikasi -->
-<footer class="master-footer">
-    <div class="footer-content">
-        <div class="footer-brand">
-            <h4>ROSEBAKERY Studio</h4>
-            <p>© 2026 Rosebakery Dashboard Solution. All rights reserved.</p>
-        </div>
-        <div style="text-align: right;">
-            <p>Didesain secara khusus untuk <strong style="color:var(--accent-rose-deep);">Biyaa</strong></p>
-            <span class="version-tag">Production Build v2026.1-Stable</span>
-        </div>
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand" id="sidebar-toggle" style="cursor:pointer;">
+    <!-- Rose Bakery SVG Logo -->
+    <svg class="logo-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="36" height="36" rx="10" fill="url(#lg1)"/>
+      <path d="M18 30 Q17 25 18 20" stroke="rgba(255,255,255,.7)" stroke-width="1.3" stroke-linecap="round"/>
+      <path d="M18 24 Q14 22 13 19 Q16 19 18 24Z" fill="rgba(255,255,255,.55)"/>
+      <ellipse cx="18" cy="15" rx="5.5" ry="3.5" fill="rgba(255,255,255,.25)" transform="rotate(-30 18 15)"/>
+      <ellipse cx="18" cy="15" rx="5.5" ry="3.5" fill="rgba(255,255,255,.25)" transform="rotate(30 18 15)"/>
+      <ellipse cx="18" cy="15" rx="5.5" ry="3.5" fill="rgba(255,255,255,.25)" transform="rotate(90 18 15)"/>
+      <ellipse cx="18" cy="15" rx="3.8" ry="2.5" fill="rgba(255,255,255,.35)" transform="rotate(-15 18 15)"/>
+      <ellipse cx="18" cy="15" rx="3.8" ry="2.5" fill="rgba(255,255,255,.35)" transform="rotate(60 18 15)"/>
+      <ellipse cx="18" cy="15" rx="3.8" ry="2.5" fill="rgba(255,255,255,.35)" transform="rotate(135 18 15)"/>
+      <circle cx="18" cy="15" r="2.4" fill="rgba(255,255,255,.7)"/>
+      <circle cx="18" cy="15" r="1.1" fill="url(#lg2)"/>
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ff6b9d"/>
+          <stop offset="100%" stop-color="#c73062"/>
+        </linearGradient>
+        <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ff9eb5"/>
+          <stop offset="100%" stop-color="#f97098"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="brand-text">
+      <div class="brand-name"><span>Rose</span>Bakery</div>
+      <div class="brand-sub">Manager · 2026</div>
     </div>
+  </div>
+
+  <div class="nav-links">
+    <button data-target="dashboard" class="on"><i class="fa-solid fa-table-columns"></i> Dashboard</button>
+    <button data-target="orders"><i class="fa-solid fa-bag-shopping"></i> Orders</button>
+    <button data-target="products"><i class="fa-solid fa-cookie-bite"></i> Products</button>
+    <button data-target="inventory"><i class="fa-solid fa-boxes-stacked"></i> Inventory</button>
+    <button data-target="employees"><i class="fa-solid fa-users"></i> Employees</button>
+    <button data-target="reports"><i class="fa-solid fa-chart-simple"></i> Reports</button>
+    <button data-target="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+  </div>
+
+  <div class="nav-r">
+    <div class="n-search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="global-search" placeholder="Search orders, products…"/>
+    </div>
+    <button class="ni-btn" id="noti-btn"><i class="fa-regular fa-bell"></i><span class="n-dot"></span></button>
+    <button class="ni-btn" id="time-btn"><i class="fa-solid fa-clock"></i></button>
+    <div class="profile-container">
+      <div class="nav-av" id="profile-avatar">SO</div>
+      <div class="profile-menu" id="profile-dropdown">
+        <a href="#profile">My Profile</a>
+        <a href="#settings" data-target="settings">Settings</a>
+        <hr style="border: 0; border-top: 1px solid var(--border-light); margin: 4px 0;">
+        <a href="#logout" style="color: var(--p6)">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout" id="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sb">
+    <div class="sb-section">Operations</div>
+    <div data-target="dashboard" class="sb-item on"><i class="fa-solid fa-table-columns"></i> <span>Dashboard</span></div>
+    <div data-target="orders" class="sb-item"><i class="fa-solid fa-bag-shopping"></i> <span>Today's Orders</span> <span class="sb-pill">18</span></div>
+    <div data-target="orders" class="sb-item"><i class="fa-regular fa-clock"></i> <span>Pending</span> <span class="sb-pill a">6</span></div>
+    <div data-target="products" class="sb-item"><i class="fa-solid fa-fire-burner"></i> <span>Production</span></div>
+    <div data-target="inventory" class="sb-item"><i class="fa-solid fa-boxes-stacked"></i> <span>Inventory</span> <span class="sb-pill blink-soft" style="color: var(--p6)">3 low</span></div>
+    <div class="sb-section">Team</div>
+    <div data-target="employees" class="sb-item"><i class="fa-solid fa-user-clock"></i> <span>Schedules</span></div>
+    <div data-target="dashboard" class="sb-item"><i class="fa-solid fa-star"></i> <span>Reviews</span> <span class="sb-pill g">12</span></div>
+    <div data-target="reports" class="sb-item"><i class="fa-solid fa-chart-bar"></i> <span>Monthly Reports</span></div>
+  </aside>
+
+  <!-- MAIN CONTAINER WITH INTERACTIVE SECTIONS -->
+  <main class="main">
+
+    <!-- ================= SECTION: DASHBOARD ================= -->
+    <div id="section-dashboard" class="app-section active-section">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-inner">
+          <div>
+            <div class="hero-eye" id="realtime-greeting">Saturday, 27 June 2026 — Morning Shift</div>
+            <h1 class="hero-title">Selamat pagi, <em>Biya.</em></h1>
+            <p class="hero-sub">Toko buka dalam <b>45 menit lagi.</b> 4 batch produksi sedang berjalan.</p>
+          </div>
+          <div class="hero-card">
+            <div class="hc-eye">Today's Snapshot</div>
+            <div class="hc-grid">
+              <div class="hc-item"><div class="lbl">Pendapatan</div><div class="val count-up" data-value="4200000">0</div><div class="vsub">+12% dari kemarin</div></div>
+              <div class="hc-item"><div class="lbl">Orders</div><div class="val count-up" data-value="18">0</div><div class="vsub">6 pending</div></div>
+              <div class="hc-div"></div>
+              <div class="hc-item"><div class="lbl">Production</div><div class="val">72%</div><div class="vsub">4 active batches</div></div>
+              <div class="hc-item"><div class="lbl">Shift</div><div class="val" style="font-size:13px;padding-top:4px"><span class="hc-badge"><i class="fa-solid fa-sun"></i> Morning</span></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section>
+        <div class="sh">
+          <div class="sh-l"><div class="st">Ringkasan <i>Bisnis</i></div><div class="ss">Data real-time — Juni 2026</div></div>
+          <span class="sh-r navigation-helper" data-target="reports">View reports <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+        <div class="sg">
+          <div class="sc"><div class="sc-icon ic-pk"><i class="fa-solid fa-bag-shopping"></i></div><div><div class="sc-num count-up" data-value="18">0</div><div class="sc-desc">Pesanan Hari Ini</div></div><div class="sc-delta">+3 dari kemarin</div></div>
+          <div class="sc"><div class="sc-icon ic-gd"><i class="fa-solid fa-money-bill-wave"></i></div><div><div class="sc-num count-up" data-value="4200000" data-format="currency">0</div><div class="sc-desc">Total Pendapatan</div></div><div class="sc-delta">+12% dari rata-rata</div></div>
+          <div class="sc"><div class="sc-icon ic-sg"><i class="fa-solid fa-cookie-bite"></i></div><div><div class="sc-num count-up" data-value="247">0</div><div class="sc-desc">Produk Terjual</div></div><div class="sc-delta">+28 dari kemarin</div></div>
+          <div class="sc"><div class="sc-icon ic-bl"><i class="fa-solid fa-truck"></i></div><div><div class="sc-num count-up" data-value="5">0</div><div class="sc-desc">Pengiriman Pending</div></div><div class="sc-delta neg">2 mendesak</div></div>
+        </div>
+      </section>
+
+      <!-- TWO COL (REVIEWS + ANALYTICS) -->
+      <div class="two-col">
+        <section>
+          <div class="sh">
+            <div class="sh-l"><div class="st">Ulasan <i>Pelanggan</i></div><div class="ss">12 ulasan baru minggu ini</div></div>
+          </div>
+          <div class="rg">
+            <div class="rc"><div class="rc-hd"><div class="tav"><div class="av a1">CA</div><span class="rc-name">Charlotte Allen</span></div><span class="rc-date">26 Jun 2026</span></div><div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><span class="rc-prod">Sourdough Loaf</span><p class="rc-text">Kulitnya sempurna, teksturnya luar biasa. Rasa fermentasinya tepat.</p></div>
+            <div class="rc"><div class="rc-hd"><div class="tav"><div class="av a3">JM</div><span class="rc-name">James Moore</span></div><span class="rc-date">25 Jun 2026</span></div><div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star e"></i></div><span class="rc-prod">Butter Croissant</span><p class="rc-text">Lapisannya cantik banget dan aromanya mentega wangi sekali.</p></div>
+          </div>
+        </section>
+
+        <section>
+          <div class="sh">
+            <div class="sh-l"><div class="st">Analitik <i>Penjualan</i></div><div class="ss">Performa mingguan — Juni 2026</div></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-ttl">
+              <span>Pendapatan Harian Minggu Ini</span>
+              <select class="chart-filter-select" id="chart-filter">
+                <option value="hari">Hari Ini</option>
+                <option value="minggu" selected>Mingguan</option>
+                <option value="bulan">Bulanan</option>
+                <option value="tahun">Tahunan</option>
+              </select>
+            </div>
+            <div class="chart-body" id="main-chart-body">
+              <div class="b-col"><div class="b-wrap"><div class="bar" style="height:60%"></div></div><div class="b-lbl">Mon</div><div class="bar-tip">Rp3.5M</div></div>
+              <div class="b-col"><div class="b-wrap"><div class="bar" style="height:72%"></div></div><div class="b-lbl">Tue</div><div class="bar-tip">Rp4.1M</div></div>
+              <div class="b-col"><div class="b-wrap"><div class="bar b-gd" style="height:85%"></div></div><div class="b-lbl">Wed</div><div class="bar-tip">Rp4.8M</div></div>
+              <div class="b-col"><div class="b-wrap"><div class="bar" style="height:65%"></div></div><div class="b-lbl">Thu</div><div class="bar-tip">Rp3.7M</div></div>
+              <div class="b-col"><div class="b-wrap"><div class="bar" style="height:68%"></div></div><div class="b-lbl">Fri</div><div class="bar-tip">Rp3.9M</div></div>
+              <div class="b-col"><div class="b-wrap"><div class="bar b-hot" style="height:74%"></div></div><div class="b-lbl">Today</div><div class="bar-tip">Rp4.2M</div></div>
+              <div class="b-col"><div class="b-wrap"><div class="bar" style="height:90%;opacity:.25%"></div></div><div class="b-lbl">Sun</div><div class="bar-tip">Est Rp5.0M</div></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ================= SECTION: ORDERS ================= -->
+    <div id="section-orders" class="app-section">
+      <div class="sh">
+        <div class="sh-l"><div class="st">Daftar Kelola <i>Orders</i></div><div class="ss">Manajemen pesanan real-time</div></div>
+      </div>
+      <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+        <input type="text" class="table-search-input" id="search-orders" placeholder="Cari ID atau nama pelanggan..." style="background: white; border: 1.5px solid var(--border-light); padding: 8px 16px; border-radius: var(--r-pill); width: 300px; font-size: 13px;">
+      </div>
+      <div class="tc">
+        <div class="tw">
+          <table id="table-orders">
+            <thead>
+              <tr><th>ID Pesanan</th><th>Pelanggan</th><th>Produk</th><th>Waktu</th><th>Pembayaran</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="tid">#RB-0627-001</td><td><div class="tav"><div class="av a1">CA</div><span class="tbold">Charlotte Allen</span></div></td><td>Sourdough Loaf × 2, Croissant × 4</td><td>07:14</td><td><span class="badge b-paid">Lunas</span></td><td><span class="badge b-delivered">Terkirim</span></td></tr>
+              <tr><td class="tid">#RB-0627-002</td><td><div class="tav"><div class="av a2">OW</div><span class="tbold">Oliver West</span></div></td><td>Birthday Cake (Custom) × 1</td><td>07:45</td><td><span class="badge b-paid">Lunas</span></td><td><span class="badge b-onway">Dalam Perjalanan</span></td></tr>
+              <tr><td class="tid">#RB-0627-003</td><td><div class="tav"><div class="av a3">EH</div><span class="tbold">Emily Hart</span></div></td><td>Cinnamon Roll × 6, Lemon Tart × 3</td><td>08:02</td><td><span class="badge b-pending">Menunggu</span></td><td><span class="badge b-processing">Diproses</span></td></tr>
+              <tr><td class="tid">#RB-0627-004</td><td><div class="tav"><div class="av a4">JM</div><span class="tbold">James Moore</span></div></td><td>Focaccia × 1, Bagel × 4</td><td>08:18</td><td><span class="badge b-paid">Lunas</span></td><td><span class="badge b-ready">Siap Diambil</span></td></tr>
+              <tr><td class="tid">#RB-0627-005</td><td><div class="tav"><div class="av a5">NB</div><span class="tbold">Natalie Brooks</span></div></td><td>Macarons Box × 2, Éclair × 8</td><td>08:35</td><td><span class="badge b-unpaid">Belum Bayar</span></td><td><span class="badge b-processing">Diproses</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SECTION: PRODUCTS ================= -->
+    <div id="section-products" class="app-section">
+      <div class="sh">
+        <div class="sh-l"><div class="st">Jadwal <i>Produksi & Produk</i></div><div class="ss">Pemantauan panggangan aktif</div></div>
+      </div>
+      <div class="pg">
+        <div class="pc"><div class="pc-hd"><div class="pc-name">Classic Sourdough Loaf</div><span class="badge b-inprog">Berlangsung</span></div><div class="pc-meta"><div class="pc-row"><i class="fa-solid fa-layer-group"></i><b>Jml:</b> 24 loaf</div><div class="pc-row"><i class="fa-regular fa-clock"></i> Selesai est. 10:30</div></div><div class="pc-prog"><div class="pc-track"><div class="pc-fill" data-width="78%"></div></div><span class="pc-pct">78%</span></div><div class="pc-ft"><span class="badge b-high">Prioritas Tinggi</span><span class="pc-oven">Oven 1</span></div></div>
+        <div class="pc"><div class="pc-hd"><div class="pc-name">Butter Croissants</div><span class="badge b-inprog">Berlangsung</span></div><div class="pc-meta"><div class="pc-row"><i class="fa-solid fa-layer-group"></i><b>Jml:</b> 60 pcs</div><div class="pc-row"><i class="fa-regular fa-clock"></i> Selesai est. 09:45</div></div><div class="pc-prog"><div class="pc-track"><div class="pc-fill" data-width="90%"></div></div><span class="pc-pct">90%</span></div><div class="pc-ft"><span class="badge b-high">Prioritas Tinggi</span><span class="pc-oven">Oven 2</span></div></div>
+        <div class="pc"><div class="pc-hd"><div class="pc-name">Custom Birthday Cake</div><span class="badge b-inprog">Berlangsung</span></div><div class="pc-meta"><div class="pc-row"><i class="fa-solid fa-layer-group"></i><b>Jml:</b> 1 tier cake</div><div class="pc-row"><i class="fa-regular fa-clock"></i> Selesai est. 11:00</div></div><div class="pc-prog"><div class="pc-track"><div class="pc-fill" data-width="55%"></div></div><span class="pc-pct">55%</span></div><div class="pc-ft"><span class="badge b-high">Prioritas Tinggi</span><span class="pc-oven">Stasiun Dekorasi</span></div></div>
+      </div>
+    </div>
+
+    <!-- ================= SECTION: INVENTORY ================= -->
+    <div id="section-inventory" class="app-section">
+      <div class="sh">
+        <div class="sh-l"><div class="st">Manajemen <i>Inventori & Bahan</i></div><div class="ss">Stok bahan baku terintegrasi</div></div>
+      </div>
+      <div class="tc">
+        <div class="tw">
+          <table>
+            <thead><tr><th>Bahan</th><th>Stok</th><th>Min.</th><th>Supplier</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tbold">Tepung Terigu Protein Tinggi</span></td><td><span style="font-family:var(--font-m);font-weight:600">48 kg</span></td><td>20 kg</td><td>PT Bogasari</td><td><span class="badge b-ok">Cukup</span></td></tr>
+              <tr class="blink-soft"><td><span class="tbold">Mentega Tawar</span></td><td><span style="font-family:var(--font-m);font-weight:600;color:var(--p5)">3,5 kg</span></td><td>5 kg</td><td>Anchor Food</td><td><span class="badge b-low">Hampir Habis</span></td></tr>
+              <tr><td><span class="tbold">Telur Segar Grade A</span></td><td><span style="font-family:var(--font-m);font-weight:600">180 pcs</span></td><td>100 pcs</td><td>Pak Tani Farm</td><td><span class="badge b-ok">Cukup</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SECTION: EMPLOYEES ================= -->
+    <div id="section-employees" class="app-section">
+      <div class="sh">
+        <div class="sh-l"><div class="st">Jadwal & Profil <i>Karyawan</i></div><div class="ss">Manajemen tim RoseBakery</div></div>
+      </div>
+      <div class="eg">
+        <div class="ec"><div class="ec-av-w"><div class="ec-av a1">MW</div><span class="ec-dot dot-on"></span></div><div class="ec-name">Marcus Webb</div><div class="ec-role">Head Baker</div><div class="ec-station">Stasiun Oven 1</div><div class="ec-hours">06:00 – 14:00</div><span class="badge b-active">Aktif</span></div>
+        <div class="ec"><div class="ec-av-w"><div class="ec-av a6">CF</div><span class="ec-dot dot-on"></span></div><div class="ec-name">Claire Fontaine</div><div class="ec-role">Pastry Chef</div><div class="ec-station">Stasiun Pastry</div><div class="ec-hours">06:00 – 14:00</div><span class="badge b-active">Aktif</span></div>
+        <div class="ec"><div class="ec-av-w"><div class="ec-av a5">SL</div><span class="ec-dot dot-on"></span></div><div class="ec-name">Sophie Laurent</div><div class="ec-role">Cake Decorator</div><div class="ec-station">Stasiun Dekorasi</div><div class="ec-hours">07:00 – 15:00</div><span class="badge b-active">Aktif</span></div>
+      </div>
+    </div>
+
+    <!-- ================= SECTION: REPORTS ================= -->
+    <div id="section-reports" class="app-section">
+      <div class="sh">
+        <div class="sh-l"><div class="st">Laporan <i>Omzet & Bisnis</i></div><div class="ss">Analitik data performa penjualan</div></div>
+      </div>
+      <div class="an-g">
+        <div class="an-c"><div class="an-lbl">Pendapatan Mingguan</div><div class="an-val gd">Rp28,4 Jt</div><div class="an-sub"><b>+8,2%</b> vs minggu lalu</div></div>
+        <div class="an-c"><div class="an-lbl">Pendapatan Bulanan</div><div class="an-val">Rp112 Jt</div><div class="an-sub"><b>+5,1%</b> vs Mei</div></div>
+      </div>
+    </div>
+
+    <!-- ================= SECTION: SETTINGS ================= -->
+    <div id="section-settings" class="app-section">
+      <div class="sh">
+        <div class="sh-l"><div class="st">Pengaturan <i>Aplikasi</i></div><div class="ss">Konfigurasi sistem BakeFlow v2.0.0</div></div>
+      </div>
+      <div style="background: white; padding: 24px; border-radius: var(--r-xl); border: 1.5px solid var(--border-light);">
+        <p style="margin-bottom: 12px; font-weight: 600;">Opsi Tema Tampilan</p>
+        <button id="dark-mode-toggle" style="background: var(--p1); color: var(--p5); padding: 8px 16px; border-radius: var(--r-md); font-weight: 600;">Toggle Dark/Pink Mode</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top"><i class="fa-solid fa-arrow-up"></i></button>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <div class="fb">
+        <svg width="34" height="34" viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="10" fill="url(#flg1)"/><path d="M18 30 Q17 25 18 20" stroke="rgba(255,255,255,.7)" stroke-width="1.3" stroke-linecap="round"/><path d="M18 24 Q14 22 13 19 Q16 19 18 24Z" fill="rgba(255,255,255,.55)"/><ellipse cx="18" cy="15" rx="5.5" ry="3.5" fill="rgba(255,255,255,.25)" transform="rotate(-30 18 15)"/><ellipse cx="18" cy="15" rx="5.5" ry="3.5" fill="rgba(255,255,255,.25)" transform="rotate(30 18 15)"/><ellipse cx="18" cy="15" rx="5.5" ry="3.5" fill="rgba(255,255,255,.25)" transform="rotate(90 18 15)"/><ellipse cx="18" cy="15" rx="3.8" ry="2.5" fill="rgba(255,255,255,.35)" transform="rotate(-15 18 15)"/><ellipse cx="18" cy="15" rx="3.8" ry="2.5" fill="rgba(255,255,255,.35)" transform="rotate(60 18 15)"/><ellipse cx="18" cy="15" rx="3.8" ry="2.5" fill="rgba(255,255,255,.35)" transform="rotate(135 18 15)"/><circle cx="18" cy="15" r="2.4" fill="rgba(255,255,255,.7)"/><circle cx="18" cy="15" r="1.1" fill="#f97098"/><defs><linearGradient id="flg1" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6b9d"/> <stop offset="100%" stop-color="#c73062"/></linearGradient></defs></svg>
+        <div class="brand-text">
+          <div class="brand-name"><span>Rose</span>Bakery</div>
+          <div class="brand-sub">Manager · 2026</div>
+        </div>
+      </div>
+      <div class="ft-tagline">Freshly Baked. Perfectly Managed. The complete operations platform for artisan bakeries.</div>
+      <div class="ft-ver">v2.0.0 — 2026 Edition</div>
+    </div>
+    <div class="ft-col">
+      <div class="ft-col-ttl">Quick Links</div>
+      <button data-target="dashboard">Dashboard</button>
+      <button data-target="orders">Today's Orders</button>
+      <button data-target="products">Production</button>
+      <button data-target="inventory">Inventory</button>
+    </div>
+    <div class="ft-col">
+      <div class="ft-col-ttl">Support</div>
+      <button>Help Centre</button><button>User Guide</button>
+    </div>
+    <div class="ft-col">
+      <div class="ft-col-ttl">Legal</div>
+      <button>Privacy Policy</button>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="ft-copy">&copy; 2026 <b>RoseBakery Manager</b>. Designed &amp; Developed by <em>Sabillah Okta Ramadhani</em>.</div>
+    <div class="ft-disc">Fictional bakery management dashboard — Computer Programming Final Project. All data for demonstration only.</div>
+  </div>
 </footer>
 
-<!-- SCRIPT ANIMASI SCROLL (POP UP POP EFFECT) -->
+<!-- INTERACTIVE APPLICATIONS JAVASCRIPT -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const animatedElements = document.querySelectorAll('.scroll-animate');
+document.addEventListener("DOMContentLoaded", () => {
+  
+  // 1. LOADING SCREEN TIMEOUT
+  const loader = document.getElementById("loading-screen");
+  setTimeout(() => {
+    loader.classList.add("fade-out");
+    document.getElementById("section-dashboard").classList.add("animated-in");
+    initCountUp();
+    initBars();
+  }, 1500);
 
-        const observerOptions = {
-            root: null,
-            threshold: 0.15,
-            rootMargin: "0px"
-        };
-
-        const intersectionObserver = new IntersectionObserver(function (entries, observer) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    
-                    const bars = entry.target.querySelectorAll('.chart-bar-fill');
-                    bars.forEach(bar => {
-                        const targetHeight = bar.getAttribute('data-target-height') || bar.getAttribute('data-height');
-                        bar.style.height = targetHeight;
-                    });
-
-                    const progressBars = entry.target.querySelectorAll('.metric-progress-bar');
-                    progressBars.forEach(pBar => {
-                        const targetWidth = pBar.getAttribute('data-target');
-                        pBar.style.width = targetWidth;
-                    });
-
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        animatedElements.forEach(el => {
-            intersectionObserver.observe(el);
+  // 2. NAVIGASI / SECTION SWITCHER
+  const navButtons = document.querySelectorAll("[data-target]");
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetSectionId = `section-${btn.getAttribute("data-target")}`;
+      const targetSection = document.getElementById(targetSectionId);
+      
+      if (targetSection) {
+        // Hilangkan active dari semua section
+        document.querySelectorAll(".app-section").forEach(sec => sec.classList.remove("active-section", "animated-in"));
+        // Aktifkan target section
+        targetSection.classList.add("active-section");
+        setTimeout(() => targetSection.classList.add("animated-in"), 50);
+        
+        // Update styling tombol aktif di Nav & Sidebar
+        document.querySelectorAll("[data-target]").forEach(b => {
+          if(b.getAttribute("data-target") === btn.getAttribute("data-target")) {
+            b.classList.add("on");
+          } else {
+            b.classList.remove("on");
+          }
         });
+        
+        // Auto trigger progress bar animation jika masuk section products
+        if(btn.getAttribute("data-target") === 'products') {
+          setTimeout(initProgressBars, 100);
+        }
+      }
     });
-</script>
+  });
 
+  // Helper untuk view reports link
+  document.querySelectorAll(".navigation-helper").forEach(el => {
+    el.addEventListener("click", () => {
+      const target = el.getAttribute("data-target");
+      const targetBtn = document.querySelector(`.nav-links button[data-target="${target}"]`);
+      if(targetBtn) targetBtn.click();
+    });
+  });
+
+  // 3. COUNT UP ANIMATION FUNCTION
+  function initCountUp() {
+    document.querySelectorAll(".count-up").forEach(el => {
+      const targetVal = parseInt(el.getAttribute("data-value"), 10);
+      const isCurrency = el.getAttribute("data-format") === "currency";
+      let startVal = 0;
+      const duration = 1500;
+      const steps = 60;
+      const stepTime = duration / steps;
+      const increment = targetVal / steps;
+      
+      const timer = setInterval(() => {
+        startVal += increment;
+        if (startVal >= targetVal) {
+          startVal = targetVal;
+          clearInterval(timer);
+        }
+        
+        if (isCurrency) {
+          el.textContent = "Rp" + (Math.floor(startVal) / 1000000).toFixed(1) + "M";
+        } else {
+          el.textContent = Math.floor(startVal).toLocaleString();
+        }
+      }, stepTime);
+    });
+  }
+
+  // 4. ANIMASI GRAFIK BAR
+  function initBars() {
+    document.querySelectorAll(".bar").forEach(bar => {
+      bar.classList.add("animate");
+    });
+  }
+
+  function initProgressBars() {
+    document.querySelectorAll(".pc-fill").forEach(fill => {
+      const width = fill.getAttribute("data-width");
+      fill.style.width = width;
+    });
+  }
+
+  // 5. TOAST NOTIFICATION REAL-TIME
+  const toastContainer = document.getElementById("toast-container");
+  function showToast(message, type = "info") {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.innerHTML = `<i class="fa-solid fa-cookie-bite" style="color:var(--p5)"></i> <span>${message}</span>`;
+    toastContainer.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.transform = "translateX(120%)";
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+
+  // Trigger notification pertama kali
+  setTimeout(() => showToast("4 Batch Produksi sedang berjalan lancar! 🥖"), 3000);
+  document.getElementById("noti-btn").addEventListener("click", () => {
+    showToast("Tidak ada notifikasi mendesak baru saat ini.");
+  });
+
+  // 6. RIPPLE EFFECT PADA TOMBOL/CARD
+  document.body.addEventListener("click", (e) => {
+    if (e.target.tagName === "BUTTON" || e.target.closest(".sb-item") || e.target.closest(".sc")) {
+      const target = e.target.tagName === "BUTTON" ? e.target : e.target.closest("button, .sb-item, .sc");
+      const rect = target.getBoundingClientRect();
+      const ripple = document.createElement("span");
+      ripple.className = "ripple";
+      ripple.style.left = `${e.clientX - rect.left}px`;
+      ripple.style.top = `${e.clientY - rect.top}px`;
+      target.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    }
+  });
+
+  // 7. REALTIME DIGITAL CLOCK & GREETING
+  function updateTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const greetingEl = document.getElementById("realtime-greeting");
+    
+    let greetingWord = "Selamat pagi";
+    if (now.getHours() >= 11 && now.getHours() < 15) greetingWord = "Selamat siang";
+    else if (now.getHours() >= 15 && now.getHours() < 18) greetingWord = "Selamat sore";
+    else if (now.getHours() >= 18) greetingWord = "Selamat malam";
+
+    if (greetingEl) {
+      greetingEl.innerHTML = `${greetingWord}, 27 Juni 2026 — <i class="fa-regular fa-clock"></i> ${hours}:${minutes}`;
+    }
+  }
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  document.getElementById("time-btn").addEventListener("click", () => {
+    const now = new Date();
+    showToast(`Waktu sistem: ${now.toLocaleTimeString()}`);
+  });
+
+  // 8. SIDEBAR COLLAPSE / EXPAND
+  const sidebarToggle = document.getElementById("sidebar-toggle");
+  const appLayout = document.getElementById("app-layout");
+  sidebarToggle.addEventListener("click", () => {
+    appLayout.classList.toggle("collapsed");
+  });
+
+  // 9. PROFILE DROPDOWN
+  const avatar = document.getElementById("profile-avatar");
+  const dropdown = document.getElementById("profile-dropdown");
+  avatar.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle("show");
+  });
+  document.addEventListener("click", () => dropdown.classList.remove("show"));
+
+  // 10. BACK TO TOP BUTTON
+  const btt = document.getElementById("back-to-top");
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) btt.classList.add("show");
+    else btt.classList.remove("show");
+  });
+  btt.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // 11. SEARCH FUNCTION PADA TABEL ORDERS
+  const searchOrdersInput = document.getElementById("search-orders");
+  if (searchOrdersInput) {
+    searchOrdersInput.addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll("#table-orders tbody tr");
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(q) ? "" : "none";
+      });
+    });
+  }
+
+  // Global Search Nav Mock
+  document.getElementById("global-search").addEventListener("keypress", (e) => {
+    if(e.key === 'Enter') {
+      showToast(`Mencari "${e.target.value}" di seluruh pangkalan data...`);
+    }
+  });
+
+  // 12. CHART FILTER ANIMATION INTERACTION
+  document.getElementById("chart-filter").addEventListener("change", (e) => {
+    showToast(`Mengubah rentang grafik ke: ${e.target.value}`);
+    const bars = document.querySelectorAll(".bar");
+    bars.forEach(bar => {
+      bar.style.transform = "scaleY(0)";
+      setTimeout(() => {
+        // Randomize height sedikit agar terasa interaktif saat difilter
+        const randomHeight = Math.floor(Math.random() * 50) + 40;
+        bar.style.height = `${randomHeight}%`;
+        bar.style.transform = "scaleY(1)";
+      }, 300);
+    });
+  });
+
+  // 13. TABEL ROW HIGHLIGHT INTERACTION
+  document.querySelectorAll("tbody tr").forEach(row => {
+    row.addEventListener("click", () => {
+      row.classList.toggle("selected-row");
+    });
+  });
+
+  // 14. DARK MODE TOGGLE (OPTIONAL PINKISH DARK)
+  document.getElementById("dark-mode-toggle").addEventListener("click", () => {
+    const currentBg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+    if(currentBg === '#fff0f4') {
+      document.documentElement.style.setProperty('--bg', '#2d0f1a');
+      document.documentElement.style.setProperty('--card', '#3d1c28');
+      document.documentElement.style.setProperty('--gray-700', '#ffe4ea');
+      document.documentElement.style.setProperty('--gray-900', '#ffffff');
+      showToast("Dark Pink Mode Diaktifkan ✨");
+    } else {
+      document.documentElement.style.setProperty('--bg', '#fff0f4');
+      document.documentElement.style.setProperty('--card', '#ffffff');
+      document.documentElement.style.setProperty('--gray-700', '#5a2838');
+      document.documentElement.style.setProperty('--gray-900', '#2d0f1a');
+      showToast("Kembali ke Classic Pink Theme 🌸");
+    }
+  });
+
+});
+</script>
 </body>
 </html>
